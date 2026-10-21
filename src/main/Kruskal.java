@@ -2,78 +2,68 @@ import java.util.*;
 
 public class Kruskal {
 
-    public static class Arista implements Comparable<Arista> {
-        int origen;
-        int destino;
-        int peso;
+    public static class Edge implements Comparable<Edge> {
+        int origin;
+        int next;
+        int weight;
 
-        public Arista(int origen, int destino, int peso) {
-            this.origen = origen;
-            this.destino = destino;
-            this.peso = peso;
+        public Edge (int origin, int next, int weight) {
+            this.origin = origin;
+            this.next = next;
+            this.weight = weight;
         }
 
         @Override
-        public int compareTo(Arista otra) {
-            return Integer.compare(this.peso, otra.peso);
+        public int compareTo (Edge a) {
+            return Integer.compare(this.weight, a.weight);
         }
     }
     public static class UnionFind {
 
-        private final int[] padre;
-        private final int[] rango;
+        private final int[] parent;
+        private final int[] range;
 
         public UnionFind(int n) {
-            padre = new int[n];
-            rango = new int[n];
-
+            parent = new int[n];
+            range = new int[n];
             for (int i = 0; i < n; i++) {
-                padre[i] = i;
+                parent[i] = i;
             }
         }
 
-        public int find(int x) {
-            if (padre[x] != x) {
-                padre[x] = find(padre[x]);
+        public int find (int x) {
+            if (parent[x] != x) {
+                parent[x] = find(parent[x]);
             }
-            return padre[x];
+            return parent[x];
         }
 
-        public boolean union(int x, int y) {
-            int raizX = find(x);
-            int raizY = find(y);
-
-            if (raizX == raizY) {
+        public boolean union (int x, int y) {
+            int rootX = find(x);
+            int rootY = find(y);
+            if (rootX == rootY) {
                 return false;
             }
-
-            if (rango[raizX] < rango[raizY]) {
-                padre[raizX] = raizY;
-            } else if (rango[raizX] > rango[raizY]) {
-                padre[raizY] = raizX;
+            if (range[rootX] < range[rootY]) {
+                parent[rootX] = rootY;
+            } else if (range[rootX] > range[rootY]) {
+                parent[rootY] = rootX;
             } else {
-                padre[raizY] = raizX;
-                rango[raizX]++;
+                parent[rootY] = rootX;
+                range[rootX]++;
             }
-
             return true;
         }
     }
-    public static List<Arista> kruskal(int vertices, List<Arista> aristas) {
-
-        List<Arista> ordenadas = new ArrayList<>(aristas);
-        Collections.sort(ordenadas);
-
+    public static List<Edge> kruskal(int vertices, List<Edge> edges) {
+        List<Edge> ordered = new ArrayList<>(edges);
+        Collections.sort(ordered);
         UnionFind uf = new UnionFind(vertices);
-
-        List<Arista> mst = new ArrayList<>();
-
-        for (Arista arista : ordenadas) {
-
-            if (uf.union(arista.origen, arista.destino)) {
-                mst.add(arista);
+        List<Edge> mst = new ArrayList<>();
+        for (Edge edge : ordered) {
+            if (uf.union(edge.origin, edge.next)) {
+                mst.add(edge);
             }
-
             if (mst.size() == vertices - 1) {
                 break;
             }
