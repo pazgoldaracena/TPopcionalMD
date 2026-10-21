@@ -20,20 +20,20 @@ public class Kruskal {
     }
     public static class UnionFind {
 
-        private final int[] parent;
-        private final int[] range;
+        private final int[] parent; //represents sets
+        private final int[] range; //optimize the unions, allows to keep trees shallow
 
-        public UnionFind(int n) {
-            parent = new int[n];
+        //at the beginning each vertex starts belonging to its own set -> each vertex starts being its own parent
+        public UnionFind (int n) {
+            parent = new int[n]; // array with n positions for each vertex
             range = new int[n];
             for (int i = 0; i < n; i++) {
                 parent[i] = i;
             }
         }
-
-        public int find (int x) {
+        public int find (int x) { //finds the root of each set -> what is the representative of the set to which vertex x belongs?
             if (parent[x] != x) {
-                parent[x] = find(parent[x]);
+                parent[x] = find(parent[x]); //optimization -> PATH COMPRESSION -> updates vertex's parent
             }
             return parent[x];
         }
@@ -41,7 +41,7 @@ public class Kruskal {
         public boolean union (int x, int y) {
             int rootX = find(x);
             int rootY = find(y);
-            if (rootX == rootY) {
+            if (rootX == rootY) { //there's no union -> already connected
                 return false;
             }
             if (range[rootX] < range[rootY]) {
@@ -52,7 +52,7 @@ public class Kruskal {
                 parent[rootY] = rootX;
                 range[rootX]++;
             }
-            return true;
+            return true; //vertices in different sets -> ended up connected
         }
     }
     public static List<Edge> kruskal(int vertices, List<Edge> edges) {
@@ -61,10 +61,10 @@ public class Kruskal {
         UnionFind uf = new UnionFind(vertices);
         List<Edge> mst = new ArrayList<>();
         for (Edge edge : ordered) {
-            if (uf.union(edge.origin, edge.next)) {
+            if (uf.union(edge.origin, edge.next)) { //checks different sets
                 mst.add(edge);
             }
-            if (mst.size() == vertices - 1) {
+            if (mst.size() == vertices - 1) { //tree property
                 break;
             }
         }
