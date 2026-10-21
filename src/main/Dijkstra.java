@@ -48,7 +48,7 @@ public class Dijkstra {
             if (actual.distancia > dist[u]) continue;
 
             // Recorro las Aristas correspondientes al Nodo con vértice u (en el índice u)
-            for (Arista a : grafo.get(u)) {p
+            for (Arista a : grafo.get(u)) {
                 int nueva = dist[u] + a.peso; // Me guardo la distancia que ya tenía guardada + el peso correspondiente a la Arista actual
                 if (nueva < dist[a.destino]) { // Si esa nueva distancia calculada es mejor a la distancia en el índice del destino
                     dist[a.destino] = nueva; // Actualizo el índice para que corresponda al mejor camino con la menor distancia
