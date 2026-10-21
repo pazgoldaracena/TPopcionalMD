@@ -78,7 +78,6 @@ public class Kruskal {
                 break;
             }
         }
-
         return mst;
     }
 }
